@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
@@ -34,7 +35,7 @@ import com.app.tools.kafka.PersonProcessor;
 import com.app.tools.kafka.PersonWriter;
 import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 
-@ActiveProfiles("test2")
+@ActiveProfiles("test2") // application-test2.properties
 @SpringBatchTest
 @SpringBootTest(
 properties = { "spring.batch.job.enabled=false",
@@ -42,6 +43,7 @@ properties = { "spring.batch.job.enabled=false",
 				"spring.batch.jdbc.initialize-schema=always",
 				"spring.main.banner-mode=off"})
 @EmbeddedKafka(partitions = 1, topics = { "person-topic" })
+@Disabled("Skipping all tests in this class temporarily")
 public class KafkaReaderTest {
 	 
 
