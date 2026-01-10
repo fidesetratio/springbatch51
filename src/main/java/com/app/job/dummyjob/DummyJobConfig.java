@@ -67,9 +67,9 @@ public class DummyJobConfig {
 	    @StepScope
 	    public ItemReader<Person> personReader() {
 	        return new PersonItemReader(List.of(
-	                new Person(1L, "Andi", 25),
-	                new Person(2L, "Budi", 17),
-	                new Person(3L, "Citra", 30)
+	                new Person(1, "Andi", 25),
+	                new Person(2, "Budi", 17),
+	                new Person(3, "Citra", 30)
 	        ));
 	    }
 

@@ -30,22 +30,22 @@
         </dependency>
 
         <!-- Spring Integration 6 + DSL -->
-        <dependency>
+       <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-integration</artifactId>
-        </dependency>
+        </dependency> 
 
         <!-- Spring Batch ↔ Integration bridge -->
-        <dependency>
+     <dependency>
             <groupId>org.springframework.batch</groupId>
             <artifactId>spring-batch-integration</artifactId>
         </dependency>
 
         <!-- Kafka (Integration + Template) -->
-        <dependency>
+     <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-kafka</artifactId>
-        </dependency>
+        </dependency> 
 
         <!-- Jackson Java Time (IMPORTANT) -->
         <dependency>
@@ -84,6 +84,7 @@
    			 <artifactId>spring-batch-test</artifactId>
     		<scope>test</scope>
 		</dependency>
+
 
         
         
