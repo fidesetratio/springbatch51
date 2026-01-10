@@ -60,6 +60,7 @@ public class KafkaReaderJobConfig {
 	        map.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 	        map.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 	        map.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+	        map.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.app.tools.kafka.PersonEvent");
 	        map.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 	        map.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 	        map.put(ConsumerConfig.GROUP_ID_CONFIG, "batch-person-consumer-" + UUID.randomUUID());
