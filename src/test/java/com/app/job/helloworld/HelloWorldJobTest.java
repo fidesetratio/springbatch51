@@ -19,20 +19,16 @@ import com.app.job.BatchTestConfiguration;
 
 @ActiveProfiles("test")
 @SpringBatchTest
-@SpringBootTest(classes = { BatchTestConfiguration.class,HelloWorldJobConfig.class}, 
+@SpringBootTest( 
 properties = { "spring.batch.job.enabled=false",
-				"spring.batch.job.names=helloWorldJob" })
+				"spring.batch.job.names=helloWorldJob",
+				"spring.batch.jdbc.initialize-schema=always",
+				"spring.main.banner-mode=off"})
 class HelloWorldJobTest {
 	 @Autowired
 	    private JobLauncherTestUtils jobLauncherTestUtils;
 
-	    @Autowired
-	    private JobRepositoryTestUtils jobRepositoryTestUtils;
-
-	    @BeforeEach
-	    void cleanUp() {
-	        jobRepositoryTestUtils.removeJobExecutions();
-	    }
+	 
 
 	    @Test
 	    void helloWorldJob_shouldCompleteSuccessfully() throws Exception {

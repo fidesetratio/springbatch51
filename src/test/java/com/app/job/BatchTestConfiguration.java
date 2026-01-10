@@ -13,13 +13,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 @TestConfiguration
 @EnableBatchProcessing
 public class BatchTestConfiguration {
-	@Bean
-    DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("org/springframework/batch/core/schema-h2.sql")
-                .build();
-    }
+	 @Bean
+	    public DataSource dataSource() {
+	        return new EmbeddedDatabaseBuilder()
+	            .setType(EmbeddedDatabaseType.H2)
+	            .build();
+	    }
 
     @Bean
     PlatformTransactionManager transactionManager(DataSource ds) {
