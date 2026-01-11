@@ -15,18 +15,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.expression.common.LiteralExpression;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.kafka.dsl.Kafka;
+import org.springframework.integration.kafka.outbound.KafkaProducerMessageHandler;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.converter.ByteArrayJsonMessageConverter;
-import org.springframework.kafka.support.converter.RecordMessageConverter;
-import org.springframework.messaging.PollableChannel;
-import org.springframework.messaging.SubscribableChannel;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.app.tools.dummy.JobMonitoringListener;
@@ -34,6 +34,7 @@ import com.app.tools.dummy.Person;
 
 import lombok.RequiredArgsConstructor;
 
+@Profile("master")
 @Configuration
 @ConditionalOnProperty(
 		name = "spring.batch.job.names", 
@@ -49,7 +50,7 @@ public class MasterRemoteChunkJob {
     public ItemReader<Person> itemReader() {
         List<Person> data = new ArrayList<>();
 
-        for (Integer i = 1; i <= 10; i++) {
+        for (Integer i = 1; i <= 10000; i++) {
         	System.out.println("reader begin oii"+i);
             data.add(new Person(i, "Patar"+i,i));
         }
@@ -58,24 +59,34 @@ public class MasterRemoteChunkJob {
     }
     
     
-
     @Bean
-    public RecordMessageConverter recordMessageConverter() {
-        return new ByteArrayJsonMessageConverter();
+    public DirectChannel requests() {
+        return new DirectChannel();   // ✅ OK
     }
-    
     
 
     @Bean
     public IntegrationFlow masterOutboundFlow(KafkaTemplate<String, Object> kafkaTemplate) {
-        return IntegrationFlow
+       
+    	KafkaProducerMessageHandler producerMessageHandler = new KafkaProducerMessageHandler<String, Object>(kafkaTemplate);
+        producerMessageHandler.setTopicExpression(new LiteralExpression("chunk.requests"));
+        
+        
+        
+    	
+    	return IntegrationFlow
                 .from(requests())
-                .handle(Kafka.outboundChannelAdapter(kafkaTemplate)
-                        .topic("chunk.requests"))
-               
+                .log(LoggingHandler.Level.WARN)
+                .handle(producerMessageHandler)
                 .get();
     }
     
+    
+    
+    @Bean
+    public QueueChannel replies() {
+        return new QueueChannel();    // ✅ REQUIRED
+    }
     
     @Bean
     public IntegrationFlow masterInboundReplies(
@@ -84,6 +95,7 @@ public class MasterRemoteChunkJob {
         return IntegrationFlow
                 .from(Kafka.messageDrivenChannelAdapter(
                         consumerFactory, "chunk.replies"))
+                .log(LoggingHandler.Level.WARN)
                 .channel(replies())
                 .get();
     }
@@ -115,15 +127,9 @@ public class MasterRemoteChunkJob {
         public PlatformTransactionManager resourcelessTransactionManager() {
             return new ResourcelessTransactionManager();
         }
-        @Bean
-        public SubscribableChannel requests() {
-            return new DirectChannel();   // ✅ OK
-        }
+     
 
-        @Bean
-        public PollableChannel replies() {
-            return new QueueChannel();    // ✅ REQUIRED
-        }
+      
  
 
         
@@ -156,7 +162,6 @@ public class MasterRemoteChunkJob {
             ProducerFactory<String, Object> producerFactory) {
     	KafkaTemplate<String, Object> template =
                 new KafkaTemplate<>(producerFactory);
-        template.setMessageConverter(recordMessageConverter());
         return template;
     }
 }

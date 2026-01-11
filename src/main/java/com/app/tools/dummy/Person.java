@@ -1,5 +1,7 @@
 package com.app.tools.dummy;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {
+public class Person implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private Integer age;
