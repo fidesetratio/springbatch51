@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+@ConditionalOnProperty(name = "spring.kafka.producer.enabled", havingValue = "true", matchIfMissing = true)
 @Component
 @EnableScheduling
-@ConditionalOnProperty(name = "spring.kafka.producer.enabled", havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 public class PersonEventProducer {
 
-    private final KafkaTemplate<String, PersonEvent> kafkaTemplate;
+    /*private final KafkaTemplate<String, PersonEvent> kafkaTemplate;
     private static final String TOPIC = "person-topic";
     private final AtomicInteger counter = new AtomicInteger(1);
 
@@ -30,5 +30,5 @@ public class PersonEventProducer {
 
         kafkaTemplate.send(TOPIC, String.valueOf(event.getId()), event);
         System.out.println("Sent: " + event);
-    }
+    } */
 }
