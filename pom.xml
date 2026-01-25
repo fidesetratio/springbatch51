@@ -19,6 +19,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <camel.version>4.6.0</camel.version>
     </properties>
 
     <dependencies>
@@ -96,7 +97,44 @@
   <artifactId>spring-kafka</artifactId>
 </dependency>
 
+
+
+
+
+  <!-- Camel Spring Boot Starter -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Example Camel components -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-timer-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-log-starter</artifactId>
+        </dependency>
+
+
     </dependencies>
+    
+    <!-- Camel BOM -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.camel.springboot</groupId>
+                <artifactId>camel-spring-boot-bom</artifactId>
+                <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+    
 
     <build>
         <plugins>
